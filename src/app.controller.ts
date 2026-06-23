@@ -2,19 +2,10 @@ import {
   Body,
   Controller,
   Get,
-  Header,
-  HttpCode,
-  Next,
-  Param,
-  Post,
-  Query,
-  Redirect,
-  Req,
-  Res,
+  Post
 } from '@nestjs/common';
-import { AppService, type Cat } from './app.service';
-import type { Request, Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { AppService, type Cat } from './app.service';
 
 @Controller()
 export class AppController {
