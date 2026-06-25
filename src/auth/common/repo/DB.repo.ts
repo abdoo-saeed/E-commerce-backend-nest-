@@ -69,14 +69,17 @@ public async create(data: Partial<TDocument>): Promise<HydratedDocument<TDocumen
 
 
 
-  public async updateOne(
-    filter: QueryFilter<TDocument>,
-    update: UpdateQuery<TDocument>,
-    options?: MongooseUpdateQueryOptions<TDocument>,
-  ): Promise<UpdateWriteOpResult> {
-    const result = await this.model.updateOne(filter, update, options);
-    return result;
-  }
+ public async updateOne({
+  filter,
+  update,
+  options,
+}: {
+  filter: QueryFilter<TDocument>;
+  update: UpdateQuery<TDocument>;
+  options?: MongooseUpdateQueryOptions<TDocument>;
+}): Promise<UpdateWriteOpResult> {
+  return this.model.updateOne(filter, update, options);
+}
 
   public async updateMany(
     filter: QueryFilter<TDocument>,

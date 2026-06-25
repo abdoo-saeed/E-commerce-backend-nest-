@@ -35,7 +35,7 @@ export class SecurityService{
 
     async compareHash({cipher,text}:{cipher:string, text:string}){
 
-        const check = await compare(cipher,text)
+        const check = await compare(text,cipher)
         return check
 
     }

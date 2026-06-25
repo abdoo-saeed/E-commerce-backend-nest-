@@ -1,38 +1,42 @@
 import {
   IsEmail,
+  IsEnum,
   IsInt,
-  IsOptional,
   IsPhoneNumber,
   IsString,
   Length,
   Max,
   Min,
 } from 'class-validator';
+import { GenderEnum } from '../common/enums/user.enums';
 
 export class CreateUserDto {
   @IsString()
   @Length(3, 20, {
-    message: 'Username must be between 3 and 20 character long',
+    message: 'Username must be between 3 and 20 characters long',
   })
-  username?: string;
+  username: string;
 
-  @IsEmail({}, { message: 'Please provice a valid email address' })
-  email?: string;
+  @IsEmail({}, {
+    message: 'Please provide a valid email address',
+  })
+  email: string;
+
+  @IsString()
+  @Length(8, 50)
+  password: string;
+
+  @IsString()
+  confirmPassword: string;
 
   @IsInt()
   @Min(18)
   @Max(60)
-  age?: number;
+  age: number;
 
-  @IsString()
-  @IsOptional()
-  bio?: string;
-
-  @IsString({ each: true })
-  @IsOptional()
-  skills?: string[];
+  @IsEnum(GenderEnum)
+  gender: GenderEnum;
 
   @IsPhoneNumber('EG')
-  @IsOptional()
-  phone?: string;
+  phone: string;
 }

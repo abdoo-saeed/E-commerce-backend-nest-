@@ -1,9 +1,10 @@
-import { BadRequestException, Injectable, Post } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from 'src/db/user.schema';
-import { UserRepo } from './common/repo/user.repo';
+import { EmailService } from './common/email/email.service';
 import { SecurityService } from './common/modules/security/security.service';
+import { UserRepo } from './common/repo/user.repo';
+import { CreateUserDto } from './dto/createUser.dto';
+import { TokenService } from './common/modules/token/token.service';
 
 @Injectable()
 export class AuthService {
@@ -11,12 +12,15 @@ export class AuthService {
     constructor(
         // @InjectModel(User.name) private readonly _userModel:Model<User>,
         private readonly userRepo:UserRepo,
-        private readonly securityService:SecurityService
+        private readonly securityService:SecurityService,
+        private readonly emailService:EmailService,
+        private readonly tokenService:TokenService
+
     ){}
 
 
 
-    async sinUp(userData:User){
+    async sinUp(userData:CreateUserDto){
         
         const {username,email,password,age,gender,phone} = userData
 
@@ -36,10 +40,55 @@ export class AuthService {
       })
 
 
+      this.emailService.sendOtp(email)
 
 
         return{
-            data:{}
+            data:{
+                user
+            }
         }
     }
+
+
+
+
+
+    async login({email, password}:{email:string,password:string}){
+
+        const user = await this.userRepo.findByEmail(email)
+        if(!user){
+            throw new BadRequestException("in-valid email")
+        }
+        if(!await this.securityService.compareHash({cipher:user.password,text:password})){
+            throw new BadRequestException("in-valid password")
+        }
+
+        const accessToken = await this.tokenService.generateOTP({
+            payload:{_id:user._id},
+            secret:process.env.ACCESS_TOKEN_SIGNATURE as string,
+            options:{
+                expiresIn:"30M"
+            }
+        })
+        const refreshToken = await this.tokenService.generateOTP({
+            payload:{_id:user._id},
+            secret:process.env.REFRESH_TOKEN_SIGNATURE as string,
+            options:{
+                expiresIn:"7D"
+            }
+        })
+
+
+        return{
+            data:{
+                accessToken,
+                refreshToken
+            }
+        }
+    }
+
+
+
+
 }

@@ -13,11 +13,25 @@ export class AuthController {
 
 
 
-  @Post("/signUp")
-  async signUp(@Body()  body:User){
+  @Post("signUp")
+  async signUp(@Body(CustomValidationPipe)  body:CreateUserDto){
 
     const {data} = await this.authService.sinUp(body)
-
+    return{data}
   }
+
+
+  @Post("login")
+  async login(@Body() body:any){
+
+    const {data}= await this.authService.login(body)
+
+    return {
+      data
+    }
+    
+  }
+
+
 
 }

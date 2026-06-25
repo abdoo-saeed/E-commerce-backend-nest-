@@ -2,18 +2,15 @@ import { ArgumentMetadata, BadRequestException, Injectable, PipeTransform } from
 
 
 
-
 @Injectable()
-export class CustomValidationPipe implements PipeTransform{
-    transform(value: any, metadata: ArgumentMetadata) {
-
-        if(metadata.type == "body"){
-            if(value.password != value.confirmPassword){
-                throw new BadRequestException("password not match")
-            }
-        }
-        
-        
+export class CustomValidationPipe implements PipeTransform {
+  transform(value: any, metadata: ArgumentMetadata) {
+    if (metadata.type === 'body') {
+      if (value.password !== value.confirmPassword) {
+        throw new BadRequestException('password not match');
+      }
     }
 
+    return value;
+  }
 }

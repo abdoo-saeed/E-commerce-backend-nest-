@@ -55,7 +55,7 @@ export class User{
     gender!: GenderEnum
 
     @Prop({
-        type:Number,
+        type:String,
         required:function(){
             return this.provider == ProviderEnum.system
         }
@@ -72,13 +72,11 @@ export class User{
     @Prop({
         code:{
             type:String,
-            required:true,
             max:6,
             min:6
         },
         expireIn:{
             type:Date,
-            required:true,
             min:Date.now()
         },
         type:{
