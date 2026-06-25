@@ -10,4 +10,14 @@ export enum ProviderEnum {
     system
 }
 
+export enum OtpEnum {
+    register
+}
+
+export enum RoleEnum {
+    user,
+    admin
+  
+}
+
 

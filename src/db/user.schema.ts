@@ -1,6 +1,6 @@
 import { MongooseModule, Prop, Schema, SchemaFactory } from "@nestjs/mongoose"
 import { HydratedDocument } from "mongoose"
-import { GenderEnum, ProviderEnum } from "src/auth/utilis/enums/user.enums"
+import { GenderEnum, OtpEnum, ProviderEnum, RoleEnum } from "src/auth/common/enums/user.enums"
 
 
 export type IHUser = HydratedDocument<User>
@@ -67,6 +67,66 @@ export class User{
         enum:ProviderEnum
     })
     provider!: ProviderEnum
+
+
+    @Prop({
+        code:{
+            type:String,
+            required:true,
+            max:6,
+            min:6
+        },
+        expireIn:{
+            type:Date,
+            required:true,
+            min:Date.now()
+        },
+        type:{
+            type:Number,
+            default:OtpEnum.register,
+            enum:OtpEnum
+        }
+    })
+    otp!:{
+        code:string,
+        expireIn:Date,
+        type:OtpEnum
+
+    }
+
+
+    @Prop({
+        type:Boolean,
+        default:false
+    })
+    isEmailConfirmed!:boolean
+
+
+    @Prop({
+        type:String
+    })
+    profilePicture!:string
+
+
+    @Prop({
+        type:[String]
+    })
+    coverPicture!:string[]
+
+
+    @Prop({
+        type:Number,
+        enum:RoleEnum,
+        default:RoleEnum.user
+    })
+    role!:RoleEnum
+
+
+
+    @Prop({
+        type:Date
+    })
+    changedCreditTime!:Date
 }
 
 
