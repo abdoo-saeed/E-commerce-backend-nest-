@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import CryptoJS from "crypto-js"
 import {compare, hash} from "bcrypt"
 
@@ -39,5 +39,9 @@ export class SecurityService{
         return check
 
     }
+
+
+
+   
 
 } 

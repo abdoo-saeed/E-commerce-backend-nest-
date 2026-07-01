@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { CustomValidationPipe } from './pipes/validation.pipe';
 import { AuthService } from './auth.service';
-import { User } from 'src/db/user.schema';
+import { LoginDto } from './dto/login.dto';
+import { AuthGuard, type IAuthRequest } from './common/guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -22,7 +23,7 @@ export class AuthController {
 
 
   @Post("login")
-  async login(@Body() body:any){
+  async login(@Body() body:LoginDto){
 
     const {data}= await this.authService.login(body)
 
@@ -33,5 +34,15 @@ export class AuthController {
   }
 
 
+
+  @Get("profile")
+  @UseGuards(AuthGuard)
+  async getProfile(@Req() req:IAuthRequest){
+
+    return {
+      data:req.user
+    }
+
+  }
 
 }
